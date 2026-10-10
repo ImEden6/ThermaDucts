@@ -31,9 +31,15 @@ modrinth() {
   local auth=()
   if [ -n "${MODRINTH_TOKEN:-}" ]; then
     auth=(-H "Authorization: $MODRINTH_TOKEN")
-    local user
-    user=$(curl -fsS -A "$UA" "${auth[@]}" "$api/user") \
-      || { echo "::error::Modrinth rejected MODRINTH_TOKEN"; exit 1; }
+    local user status
+    user=$(curl -sS -A "$UA" "${auth[@]}" -w '\n%{http_code}' "$api/user")
+    status=${user##*$'\n'}
+    user=${user%$'\n'*}
+    if [ "$status" != 200 ]; then
+      echo "::error::Modrinth rejected MODRINTH_TOKEN (HTTP $status): $user"
+      echo "The token needs the 'Create versions' and 'Read user data' scopes."
+      exit 1
+    fi
     local user_id username
     user_id=$(jq -r .id <<<"$user")
     username=$(jq -r .username <<<"$user")
