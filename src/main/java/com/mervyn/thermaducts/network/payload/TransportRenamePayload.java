@@ -4,6 +4,7 @@ import com.mervyn.thermaducts.ThermaDucts;
 import com.mervyn.thermaducts.blockentity.DuctBlockEntity;
 import com.mervyn.thermaducts.core.duct.DuctToken;
 import com.mervyn.thermaducts.duct.transport.TransportDuctUnit;
+import com.mervyn.thermaducts.menu.TransportConfigMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,6 +14,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record TransportRenamePayload(BlockPos pos, String name) implements CustomPacketPayload {
 
+  public static final int MAX_NAME_LENGTH = 32;
+
   public static final Type<TransportRenamePayload> TYPE =
       new Type<>(Identifier.fromNamespaceAndPath(ThermaDucts.MODID, "transport_rename"));
 
@@ -21,11 +24,11 @@ public record TransportRenamePayload(BlockPos pos, String name) implements Custo
 
   private static void write(FriendlyByteBuf buf, TransportRenamePayload payload) {
     buf.writeBlockPos(payload.pos);
-    buf.writeUtf(payload.name);
+    buf.writeUtf(payload.name, MAX_NAME_LENGTH);
   }
 
   private static TransportRenamePayload read(FriendlyByteBuf buf) {
-    return new TransportRenamePayload(buf.readBlockPos(), buf.readUtf());
+    return new TransportRenamePayload(buf.readBlockPos(), buf.readUtf(MAX_NAME_LENGTH));
   }
 
   @Override
@@ -36,7 +39,14 @@ public record TransportRenamePayload(BlockPos pos, String name) implements Custo
   public static void handle(TransportRenamePayload payload, IPayloadContext ctx) {
     ctx.enqueueWork(
         () -> {
-          if (ctx.player().level().getBlockEntity(payload.pos) instanceof DuctBlockEntity ductBE
+          var player = ctx.player();
+          // Only rename the endpoint whose config menu this player has open and is still near.
+          if (!(player.containerMenu instanceof TransportConfigMenu menu)
+              || !menu.stillValid(player)
+              || !menu.getDuctPos().equals(payload.pos)) {
+            return;
+          }
+          if (player.level().getBlockEntity(payload.pos) instanceof DuctBlockEntity ductBE
               && ductBE.getDuctUnit(DuctToken.TRANSPORT) instanceof TransportDuctUnit transportUnit
               && transportUnit.isEndpoint()) {
             transportUnit.setEndpointName(payload.name);

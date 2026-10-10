@@ -30,7 +30,7 @@ public class TransportConfigScreen extends AbstractContainerScreen<TransportConf
     super.init();
     nameField = addRenderableWidget(new EditBox(font, leftPos + 32, topPos + 18, 135, 10, title));
     nameField.setBordered(false);
-    nameField.setMaxLength(32);
+    nameField.setMaxLength(TransportRenamePayload.MAX_NAME_LENGTH);
     nameField.setValue(menu.getEndpointName());
     nameField.setResponder(
         value ->

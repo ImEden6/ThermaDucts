@@ -1,6 +1,7 @@
 package com.mervyn.thermaducts.menu;
 
 import com.mervyn.thermaducts.attachment.relay.Relay;
+import com.mervyn.thermaducts.blockentity.DuctBlockEntity;
 import com.mervyn.thermaducts.blockentity.StructuralDuctBlockEntity;
 import com.mervyn.thermaducts.core.attachment.Attachment;
 import com.mervyn.thermaducts.core.duct.DuctToken;
@@ -83,7 +84,14 @@ public class RelayMenu extends AbstractContainerMenu {
 
   @Override
   public boolean stillValid(Player player) {
-    return true;
+    if (relay == null) {
+      return false;
+    }
+    DuctBlockEntity parent = relay.getParent();
+    BlockPos pos = parent.getBlockPos();
+    return !parent.isRemoved()
+        && parent.getAttachment(relay.getSide()) == relay
+        && player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
   }
 
   public Relay getRelay() {

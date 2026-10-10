@@ -3,9 +3,8 @@ package com.mervyn.thermaducts.network.payload;
 import com.mervyn.thermaducts.ThermaDucts;
 import com.mervyn.thermaducts.attachment.relay.Relay;
 import com.mervyn.thermaducts.blockentity.DuctBlockEntity;
-import com.mervyn.thermaducts.core.attachment.Attachment;
+import com.mervyn.thermaducts.menu.RelayMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -47,12 +46,14 @@ public record RelayConfigPayload(BlockPos pos, int side, int action, int value)
     ctx.enqueueWork(
         () -> {
           var player = ctx.player();
-          if (!(player.level().getBlockEntity(payload.pos) instanceof DuctBlockEntity ductBE)) {
+          // Only act on the relay whose menu this player has open and is still near.
+          if (!(player.containerMenu instanceof RelayMenu menu) || !menu.stillValid(player)) {
             return;
           }
-
-          Attachment attachment = ductBE.getAttachment(Direction.values()[payload.side]);
-          if (!(attachment instanceof Relay relay)) {
+          Relay relay = menu.getRelay();
+          DuctBlockEntity ductBE = relay.getParent();
+          if (!ductBE.getBlockPos().equals(payload.pos)
+              || relay.getSide().ordinal() != payload.side) {
             return;
           }
 

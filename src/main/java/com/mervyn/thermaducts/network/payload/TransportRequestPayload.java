@@ -4,6 +4,7 @@ import com.mervyn.thermaducts.ThermaDucts;
 import com.mervyn.thermaducts.blockentity.DuctBlockEntity;
 import com.mervyn.thermaducts.core.duct.DuctToken;
 import com.mervyn.thermaducts.duct.transport.TransportDuctUnit;
+import com.mervyn.thermaducts.menu.TransportMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -39,6 +40,12 @@ public record TransportRequestPayload(BlockPos origin, BlockPos destination)
         () -> {
           var player = ctx.player();
           if (player.isPassenger()) return;
+          // Only depart from the endpoint whose menu this player has open and is standing at.
+          if (!(player.containerMenu instanceof TransportMenu menu)
+              || !menu.stillValid(player)
+              || !menu.getDuctPos().equals(payload.origin)) {
+            return;
+          }
           if (player.level().getBlockEntity(payload.origin) instanceof DuctBlockEntity ductBE) {
             if (ductBE.getDuctUnit(DuctToken.TRANSPORT) instanceof TransportDuctUnit unit) {
               if (unit.isEndpoint()) {

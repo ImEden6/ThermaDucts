@@ -188,6 +188,7 @@ public class AttachmentMenu extends AbstractContainerMenu {
   @Override
   public boolean stillValid(Player player) {
     return !blockEntity.isRemoved()
+        && blockEntity.getAttachment(side) == attachment
         && player.distanceToSqr(
                 blockEntity.getBlockPos().getX() + 0.5,
                 blockEntity.getBlockPos().getY() + 0.5,

@@ -2,11 +2,10 @@ package com.mervyn.thermaducts.network.payload;
 
 import com.mervyn.thermaducts.ThermaDucts;
 import com.mervyn.thermaducts.blockentity.DuctBlockEntity;
-import com.mervyn.thermaducts.core.attachment.Attachment;
 import com.mervyn.thermaducts.core.attachment.ConnectionBase;
 import com.mervyn.thermaducts.core.attachment.RedstoneMode;
+import com.mervyn.thermaducts.menu.AttachmentMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -50,25 +49,38 @@ public record AttachmentConfigPayload(BlockPos pos, int side, int action, int va
     ctx.enqueueWork(
         () -> {
           var player = ctx.player();
-          if (player.level().getBlockEntity(payload.pos) instanceof DuctBlockEntity ductBE) {
-            Attachment att = ductBE.getAttachment(Direction.values()[payload.side]);
-            if (att instanceof ConnectionBase conn) {
-              switch (payload.action) {
-                case ACTION_SET_WHITELIST -> conn.getFilter().setWhitelist(payload.value == 1);
-                case ACTION_SET_MATCH_COMPONENTS ->
-                    conn.getFilter().setMatchComponents(payload.value == 1);
-                case ACTION_SET_MATCH_MOD -> conn.getFilter().setMatchModId(payload.value == 1);
-                case ACTION_SET_REDSTONE_MODE ->
-                    conn.setRedstoneMode(RedstoneMode.values()[payload.value]);
-                case ACTION_SET_MAX_STOCK -> conn.getFilter().setMaxStock(payload.value);
-                case ACTION_SET_ROUTE_TYPE -> conn.getFilter().setRouteType(payload.value);
+          // Only act on the attachment whose menu this player has open and is still near.
+          if (!(player.containerMenu instanceof AttachmentMenu menu) || !menu.stillValid(player)) {
+            return;
+          }
+          ConnectionBase conn = menu.getAttachment();
+          DuctBlockEntity ductBE = conn.getParent();
+          if (!ductBE.getBlockPos().equals(payload.pos)
+              || menu.getSide().ordinal() != payload.side) {
+            return;
+          }
+          switch (payload.action) {
+            case ACTION_SET_WHITELIST -> conn.getFilter().setWhitelist(payload.value == 1);
+            case ACTION_SET_MATCH_COMPONENTS ->
+                conn.getFilter().setMatchComponents(payload.value == 1);
+            case ACTION_SET_MATCH_MOD -> conn.getFilter().setMatchModId(payload.value == 1);
+            case ACTION_SET_REDSTONE_MODE -> {
+              RedstoneMode[] modes = RedstoneMode.values();
+              if (payload.value < 0 || payload.value >= modes.length) {
+                return;
               }
-              ductBE.setChanged();
-              player
-                  .level()
-                  .sendBlockUpdated(payload.pos, ductBE.getBlockState(), ductBE.getBlockState(), 3);
+              conn.setRedstoneMode(modes[payload.value]);
+            }
+            case ACTION_SET_MAX_STOCK -> conn.getFilter().setMaxStock(payload.value);
+            case ACTION_SET_ROUTE_TYPE -> conn.getFilter().setRouteType(payload.value);
+            default -> {
+              return;
             }
           }
+          ductBE.setChanged();
+          player
+              .level()
+              .sendBlockUpdated(payload.pos, ductBE.getBlockState(), ductBE.getBlockState(), 3);
         });
   }
 }

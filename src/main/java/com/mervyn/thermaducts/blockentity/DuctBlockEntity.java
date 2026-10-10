@@ -10,6 +10,7 @@ import com.mervyn.thermaducts.core.network.ConnectionType;
 import com.mervyn.thermaducts.core.network.NetworkManager;
 import com.mervyn.thermaducts.duct.fluid.FluidDuctUnit;
 import com.mervyn.thermaducts.duct.item.ItemDuctUnit;
+import com.mervyn.thermaducts.item.WrenchItem;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -146,6 +147,14 @@ public abstract class DuctBlockEntity extends BlockEntity {
         fluidUnit.markBeingDestroyed();
       }
       unit.invalidate();
+    }
+    if (level != null && !level.isClientSide()) {
+      for (int i = 0; i < attachments.length; i++) {
+        if (attachments[i] != null) {
+          Block.popResource(level, worldPosition, WrenchItem.getAttachmentDrop(attachments[i]));
+          attachments[i] = null;
+        }
+      }
     }
   }
 

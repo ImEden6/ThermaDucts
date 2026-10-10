@@ -93,21 +93,12 @@ public class WrenchItem extends Item {
       Block.popResource(level, pos, ductDrop);
     }
 
-    for (Attachment attachment : ductBE.getAttachments()) {
-      if (attachment == null) {
-        continue;
-      }
-      ItemStack drop = getAttachmentDrop(attachment);
-      if (!drop.isEmpty()) {
-        Block.popResource(level, pos, drop);
-      }
-    }
-
+    // Attachments and in-transit items are dropped by DuctBlockEntity.onBroken().
     level.removeBlock(pos, false);
     playPopSound(level, pos);
   }
 
-  private static ItemStack getAttachmentDrop(Attachment attachment) {
+  public static ItemStack getAttachmentDrop(Attachment attachment) {
     if (attachment instanceof Relay) {
       return new ItemStack(DDItems.RELAY.get());
     }
