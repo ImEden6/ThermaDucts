@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'net.neoforged.moddev' version '2.0.148'
+    id 'me.modmuss50.mod-publish-plugin' version '2.2.1'
 }
 
 version = mod_version
@@ -177,6 +178,49 @@ publishing {
     repositories {
         maven {
             url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+def releaseVersion = mod_version
+// changelog.md holds only the release being published, headed "# v<mod_version>".
+def releaseNotes = providers.fileContents(layout.projectDirectory.file('changelog.md')).asText.map { text ->
+    def lines = text.readLines().dropWhile { it.isBlank() }
+    def expected = "# v${releaseVersion}".toString()
+    if (lines.isEmpty() || lines[0].trim() != expected)
+        throw new GradleException("changelog.md should start with '${expected}', found '${lines ? lines[0] : ''}'")
+    lines.drop(1).join('\n').trim()
+}
+
+// Run by .github/workflows/publish.yml on a version tag. A site with an empty project ID is skipped.
+// Without a token for every site it's a dry run that only writes what it would upload to
+// build/publishMods.
+def toModrinth = !modrinth_project_id.isBlank()
+def toCurseforge = !curseforge_project_id.isBlank()
+publishMods {
+    file = jar.archiveFile
+    changelog = releaseNotes
+    type = STABLE
+    displayName = "${mod_name} ${mod_version}"
+    modLoaders.add('neoforge')
+    dryRun = (toModrinth && providers.environmentVariable('MODRINTH_TOKEN').getOrNull() == null)
+            || (toCurseforge && providers.environmentVariable('CURSEFORGE_TOKEN').getOrNull() == null)
+
+    if (toModrinth) {
+        modrinth {
+            projectId = modrinth_project_id
+            accessToken = providers.environmentVariable('MODRINTH_TOKEN')
+            minecraftVersions.add(minecraft_version)
+        }
+    }
+
+    if (toCurseforge) {
+        curseforge {
+            projectId = curseforge_project_id
+            accessToken = providers.environmentVariable('CURSEFORGE_TOKEN')
+            minecraftVersions.add(minecraft_version)
+            client = true
+            server = true
         }
     }
 }
