@@ -1,8 +1,9 @@
 name: Release
 
 # Pushing a tag like v1.0.2 builds the jar, then waits for approval on the
-# "release" environment before publishing the GitHub release.
-# It can also be started by hand from the Actions tab for an existing tag.
+# "release" environment before publishing to GitHub, Modrinth and CurseForge.
+# Starting it by hand from the Actions tab defaults to a dry run: everything is
+# built and checked (including the tokens) but nothing is published.
 on:
   push:
     tags:
@@ -10,16 +11,24 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing tag to release (e.g. v1.0.2)"
-        required: true
+        description: "Tag to release (e.g. v1.0.2). Leave empty to use the selected branch."
+        required: false
+      dry_run:
+        description: "Dry run: check everything but publish nothing"
+        type: boolean
+        default: true
 
 permissions:
   contents: read
+
+env:
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
+      ref: ${{ steps.version.outputs.ref }}
       tag: ${{ steps.version.outputs.tag }}
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -40,14 +49,20 @@ jobs:
       - name: Check tag matches mod_version
         id: version
         run: |
-          tag="${{ inputs.tag || github.ref_name }}"
           version=$(grep '^mod_version=' gradle.properties | cut -d= -f2 | tr -d '\r')
-          if [ "$tag" != "v$version" ]; then
+          tag="${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name) || '' }}"
+          if [ -n "$tag" ] && [ "$tag" != "v$version" ]; then
             echo "::error::Tag $tag does not match mod_version=$version in gradle.properties"
             exit 1
           fi
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if [ -z "$tag" ] && [ "$DRY_RUN" != "true" ]; then
+            echo "::error::A real release needs a tag. Push v$version or enter it as the tag input."
+            exit 1
+          fi
+          echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "tag=${tag:-v$version}" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Releasing $version from ${tag:-$GITHUB_REF_NAME} (dry run: $DRY_RUN)"
 
       - name: Build and test
         run: ./gradlew build -Porg.gradle.java.installations.fromEnv=JAVA_HOME_25_X64
@@ -58,17 +73,18 @@ jobs:
           path: build/libs/*.jar
           if-no-files-found: error
 
-  release:
+  # The three publish jobs share the "release" environment, so one approval
+  # starts all of them. If one fails, "Re-run failed jobs" retries only that one.
+  github:
     needs: build
     runs-on: ubuntu-latest
-    # Add required reviewers to this environment so publishing waits for your approval.
     environment: release
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.build.outputs.tag }}
+          ref: ${{ needs.build.outputs.ref }}
 
       - uses: actions/download-artifact@v4
         with:
@@ -78,7 +94,57 @@ jobs:
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.build.outputs.tag }}
+          VERSION: ${{ needs.build.outputs.version }}
         run: |
-          gh release create "${{ needs.build.outputs.tag }}" dist/*.jar \
-            --title "ThermaDucts ${{ needs.build.outputs.version }}" \
-            --notes-file changelog.md
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "GitHub release $TAG already exists; nothing to do"
+          elif [ "$DRY_RUN" = "true" ]; then
+            echo "[dry run] Would create GitHub release $TAG with:" dist/*.jar
+          else
+            gh release create "$TAG" dist/*.jar \
+              --title "ThermaDucts $VERSION" \
+              --notes-file changelog.md
+          fi
+
+  modrinth:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.ref }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: jar
+          path: dist
+
+      - name: Publish to Modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          VERSION: ${{ needs.build.outputs.version }}
+          CHANGELOG: changelog.md
+        run: JAR=$(ls dist/*.jar) bash .github/scripts/publish.sh modrinth
+
+  curseforge:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.ref }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: jar
+          path: dist
+
+      - name: Publish to CurseForge
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          VERSION: ${{ needs.build.outputs.version }}
+          CHANGELOG: changelog.md
+        run: JAR=$(ls dist/*.jar) bash .github/scripts/publish.sh curseforge
