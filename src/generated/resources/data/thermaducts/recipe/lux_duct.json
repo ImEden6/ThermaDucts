@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:structural_duct",
+    "#c:ingots/lumium"
+  ],
+  "result": {
+    "id": "thermaducts:lux_duct"
+  }
+}

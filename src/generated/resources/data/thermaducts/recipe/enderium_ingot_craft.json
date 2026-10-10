@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": "minecraft:ender_pearl",
+    "S": "#c:ingots/silver",
+    "T": "#c:ingots/tin"
+  },
+  "pattern": [
+    "ETE",
+    "TST",
+    "ETE"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thermaducts:enderium_ingot"
+  }
+}

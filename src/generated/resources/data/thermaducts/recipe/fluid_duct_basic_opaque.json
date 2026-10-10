@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": "minecraft:copper_ingot",
+    "L": "#c:ingots/lead"
+  },
+  "pattern": [
+    "ILI"
+  ],
+  "result": {
+    "count": 6,
+    "id": "thermaducts:fluid_duct_basic_opaque"
+  }
+}

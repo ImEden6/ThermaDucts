@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thermaducts:item_duct_energy_fast_opaque"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "thermaducts:blocks/item_duct_energy_fast_opaque"
+}

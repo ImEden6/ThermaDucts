@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:energy_duct_reinforced_empty",
+    "minecraft:redstone_block"
+  ],
+  "result": {
+    "id": "thermaducts:energy_duct_reinforced"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:energy_duct_basic",
+    "#c:nuggets/invar",
+    "#c:nuggets/invar",
+    "#c:nuggets/invar",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "thermaducts:energy_duct_hardened"
+  }
+}

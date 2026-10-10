@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": "#c:glass_blocks/hardened",
+    "I": "#c:ingots/lead"
+  },
+  "pattern": [
+    "IGI",
+    "G G",
+    "IGI"
+  ],
+  "result": {
+    "count": 8,
+    "id": "thermaducts:transport_duct_long_range"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:retriever_hardened",
+    "#c:ingots/electrum"
+  ],
+  "result": {
+    "id": "thermaducts:retriever_reinforced"
+  }
+}

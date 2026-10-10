@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "thermaducts:block/fluid_duct_energy_center",
+    "model": {
+      "type": "thermaducts:duct_block_item_renderer"
+    }
+  }
+}

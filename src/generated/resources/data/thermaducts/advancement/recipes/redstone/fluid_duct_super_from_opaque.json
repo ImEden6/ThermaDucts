@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_opaque": {
+      "conditions": {
+        "items": [
+          {
+            "items": "thermaducts:fluid_duct_super_opaque"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thermaducts:fluid_duct_super_from_opaque"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_opaque"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thermaducts:fluid_duct_super_from_opaque"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_hardened": {
+      "conditions": {
+        "items": [
+          {
+            "items": "thermaducts:fluid_duct_hardened"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thermaducts:fluid_duct_super"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_hardened"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thermaducts:fluid_duct_super"
+    ]
+  }
+}

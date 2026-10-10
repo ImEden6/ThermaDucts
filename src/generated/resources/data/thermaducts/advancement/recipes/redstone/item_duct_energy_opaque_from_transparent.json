@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thermaducts:item_duct_energy_opaque_from_transparent"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_transparent": {
+      "conditions": {
+        "items": [
+          {
+            "items": "thermaducts:item_duct_energy"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_transparent"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thermaducts:item_duct_energy_opaque_from_transparent"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": "#c:glass_blocks/hardened",
+    "I": "#c:ingots/bronze"
+  },
+  "pattern": [
+    "IGI",
+    "G G",
+    "IGI"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thermaducts:transport_duct_frame"
+  }
+}

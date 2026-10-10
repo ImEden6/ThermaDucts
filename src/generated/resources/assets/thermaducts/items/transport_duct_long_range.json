@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "thermaducts:block/transport_duct_long_range_center",
+    "model": {
+      "type": "thermaducts:duct_block_item_renderer"
+    }
+  }
+}

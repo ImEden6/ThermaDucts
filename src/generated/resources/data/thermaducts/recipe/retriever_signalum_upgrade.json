@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:retriever_reinforced",
+    "#c:ingots/signalum"
+  ],
+  "result": {
+    "id": "thermaducts:retriever_signalum"
+  }
+}

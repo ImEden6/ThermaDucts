@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:servo_signalum",
+    "#c:ingots/enderium"
+  ],
+  "result": {
+    "id": "thermaducts:servo_resonant"
+  }
+}

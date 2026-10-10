@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:item_duct_basic",
+    "#c:nuggets/lead",
+    "#c:nuggets/lead",
+    "#c:nuggets/lead"
+  ],
+  "result": {
+    "id": "thermaducts:item_duct_dense"
+  }
+}

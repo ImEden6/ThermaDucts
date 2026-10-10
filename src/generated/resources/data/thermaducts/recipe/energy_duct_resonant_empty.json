@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:energy_duct_signalum_empty",
+    "#c:nuggets/enderium",
+    "#c:nuggets/enderium",
+    "#c:nuggets/enderium",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "thermaducts:energy_duct_resonant_empty"
+  }
+}

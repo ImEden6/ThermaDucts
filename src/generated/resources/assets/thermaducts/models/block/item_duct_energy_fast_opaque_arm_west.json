@@ -1,0 +1,59 @@
+{
+  "parent": "block/block",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#duct",
+          "uv": [
+            0.0,
+            5.0,
+            5.0,
+            11.0
+          ]
+        },
+        "north": {
+          "texture": "#duct",
+          "uv": [
+            0.0,
+            5.0,
+            5.0,
+            11.0
+          ]
+        },
+        "south": {
+          "texture": "#duct",
+          "uv": [
+            0.0,
+            5.0,
+            5.0,
+            11.0
+          ]
+        },
+        "up": {
+          "texture": "#duct",
+          "uv": [
+            0.0,
+            5.0,
+            5.0,
+            11.0
+          ]
+        }
+      },
+      "from": [
+        0,
+        5,
+        5
+      ],
+      "to": [
+        5,
+        11,
+        11
+      ]
+    }
+  ],
+  "render_type": "solid",
+  "textures": {
+    "duct": "thermaducts:block/duct/base/tin_alt_signalum"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:energy_duct_superconductor_empty",
+    "minecraft:blue_ice"
+  ],
+  "result": {
+    "id": "thermaducts:energy_duct_superconductor"
+  }
+}

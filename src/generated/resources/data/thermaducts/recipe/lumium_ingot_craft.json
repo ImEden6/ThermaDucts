@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glowstone_dust",
+    "S": "#c:ingots/silver",
+    "T": "#c:ingots/tin"
+  },
+  "pattern": [
+    "GTG",
+    "TST",
+    "GTG"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thermaducts:lumium_ingot"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:item_duct_basic",
+    "#c:nuggets/silver",
+    "#c:nuggets/silver",
+    "#c:nuggets/silver"
+  ],
+  "result": {
+    "id": "thermaducts:item_duct_vacuum"
+  }
+}

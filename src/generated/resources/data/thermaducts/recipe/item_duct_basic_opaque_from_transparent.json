@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:item_duct_basic",
+    "#c:ingots/lead"
+  ],
+  "result": {
+    "id": "thermaducts:item_duct_basic_opaque"
+  }
+}

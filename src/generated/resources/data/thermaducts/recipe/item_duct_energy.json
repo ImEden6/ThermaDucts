@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thermaducts:item_duct_basic",
+    "#c:nuggets/signalum",
+    "#c:nuggets/signalum",
+    "#c:nuggets/signalum",
+    "#c:nuggets/electrum",
+    "#c:nuggets/electrum",
+    "#c:nuggets/electrum"
+  ],
+  "result": {
+    "id": "thermaducts:item_duct_energy"
+  }
+}

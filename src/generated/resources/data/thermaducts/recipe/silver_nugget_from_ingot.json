@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thermaducts:silver_ingot"
+  ],
+  "result": {
+    "count": 9,
+    "id": "thermaducts:silver_nugget"
+  }
+}

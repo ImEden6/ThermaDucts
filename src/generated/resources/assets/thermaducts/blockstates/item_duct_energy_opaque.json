@@ -1,0 +1,57 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_center"
+      }
+    },
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_arm_down"
+      },
+      "when": {
+        "down": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_arm_up"
+      },
+      "when": {
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_arm_north"
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_arm_south"
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_arm_west"
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "thermaducts:block/item_duct_energy_opaque_arm_east"
+      },
+      "when": {
+        "east": "true"
+      }
+    }
+  ]
+}
